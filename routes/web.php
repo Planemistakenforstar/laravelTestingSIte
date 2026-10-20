@@ -30,7 +30,7 @@ Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])
     ->middleware('auth')
     ->name('logout');
-    
+
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware('auth')
     ->name('dashboard');
@@ -41,20 +41,7 @@ Route::get('/forgot-password',  [LoginController::class, 'forgotPassword'])->nam
 
 // POST forgot password page, action method
 Route::post('/forgot-password', [LoginController::class, 'commitNewPassword'])->name('commitNewPassword');
-Route::get('/register', [RegisterController::class, 'show'])->name('register');
-Route::post('/register', function (Request $request) {
-    $validated = $request->validate([
-        'name'     => ['required', 'string', 'max:255'],
-        'email'    => ['required', 'email', 'max:255', 'unique:users,email'],
-        'password' => ['required', 'string', 'min:8', 'confirmed'],
-    ]);
+Route::get('/register',  [RegisterController::class, 'show'])->name('register');
+Route::post('/register', [RegisterController::class, 'store'])->name('register.store');
 
-    User::create([
-        'name'     => $validated['name'],
-        'email'    => $validated['email'],
-        'password' => Hash::make($validated['password']),
-    ]);
-
-    return redirect('/')->with('success', 'Registration successful!');
-})->name('register.store');
 

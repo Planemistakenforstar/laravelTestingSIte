@@ -10,11 +10,16 @@
         <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
 <style>
     {!! Vite::content('resources/css/app.css') !!}
-    </style>    
+    </style>
     </head>
     <body class="antialiased">
         <div class="relative sm:flex sm:justify-center sm:items-center min-h-screen bg-dots-darker bg-center bg-gray-100 dark:bg-dots-lighter dark:bg-gray-900 selection:bg-red-500 selection:text-white">
-            @if (Route::has('login'))
+        @if (session('success'))
+            <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400">
+                {{ session('success') }}
+            </div>
+        @endif
+        @if (Route::has('login'))
                 <div class="sm:fixed sm:top-0 sm:right-0 p-6 text-right z-10">
                     @auth
                         <a href="{{ url('/home') }}" class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Home</a>
@@ -32,9 +37,9 @@
                 <div class="flex justify-center">
             <p class="mt-4 text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
 
-            
+
             </div>
-            </p>  
+            </p>
             </div>
 
             <div class="max-w-7xl mx-auto p-6 lg:p-8">
