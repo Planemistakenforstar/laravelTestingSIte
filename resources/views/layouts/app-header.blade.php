@@ -120,9 +120,8 @@
                 <!-- Notification Dropdown -->
                 <x-header.notification-dropdown />
             </div>
-
             <!-- User Dropdown -->
-            <x-header.user-dropdown />
+            <x-header.user-dropdown  :user="auth()->user()"/>
         </div>
     </div>
 </header>

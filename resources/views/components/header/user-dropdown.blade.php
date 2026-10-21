@@ -1,3 +1,4 @@
+@props(['user'])
 <div class="relative" x-data="{
     isOpen: false,
     subDropdownOpen: false,
@@ -58,17 +59,15 @@
 }" @click.outside="closeDropdown()">
     <!-- User Trigger -->
     <button
-        class="flex items-center text-gray-700 dark:text-gray-400"
+        class="relative flex items-center justify-center text-gray-500 transition-colors bg-white border border-gray-200 rounded-full hover:text-dark-900 h-11 w-11 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white"
         type="button"
         @click="toggleDropdown()"
     >
         <span class="mr-3 overflow-hidden rounded-full h-11 w-11 rtl:mr-0 rtl:ml-3">
-            <img src="/images/user/owner.png" alt="User" />
+            <img src="/images/user/owner.png" alt="{{ $user->name }}" />
         </span>
-
-        <span class="block mr-1 font-medium text-theme-sm rtl:mr-0 rtl:ml-1">Musharof</span>
-
-        <!-- Chevron Down Icon -->
+        <span class="block mr-1 font-medium text-theme-sm rtl:mr-0 rtl:ml-1"></span>
+          <!-- Chevron Down Icon -->
         <svg
             :class="isOpen ? 'rotate-180' : ''"
             class="transition-transform duration-200 stroke-gray-500 group-hover:stroke-gray-700 dark:stroke-gray-400 dark:group-hover:stroke-gray-200"
@@ -81,7 +80,7 @@
             <path
                 d="M4.5 6.75L9 11.25L13.5 6.75"
                 stroke="currentColor"
-                stroke-width="1.5"
+                stroke-width="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
             />
@@ -102,8 +101,8 @@
     >
         <!-- User Info -->
         <div>
-            <span class="block font-medium text-gray-700 text-theme-sm dark:text-gray-400">Musharof Chowdhury</span>
-            <span class="mt-0.5 block text-theme-xs text-gray-500 dark:text-gray-400">randomuser@pimjo.com</span>
+            <span class="block font-medium text-gray-700 text-theme-sm dark:text-gray-400">{{ $user->name }}</span>
+            <span class="mt-0.5 block text-theme-xs text-gray-500 dark:text-gray-400">{{ $user->email }}</span>
         </div>
 
         <!-- Menu Items -->
@@ -221,18 +220,19 @@
             </li>
         </ul>
 
-        <!-- Sign Out -->
-        <a
-            href="/signin"
-            class="flex items-center w-full gap-3 px-3 py-2 mt-3 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
-            @click="closeDropdown()"
-        >
-            <span class="text-gray-500 group-hover:text-gray-700 dark:group-hover:text-gray-300">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
-                </svg>
-            </span>
-            Sign out
-        </a>
+        <form method="POST" action="{{ route('logout') }}">
+            @csrf
+            <button
+                type="submit"
+                class="flex items-center w-full gap-3 px-3 py-2 mt-3 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
+            >
+                <span class="text-gray-500 group-hover:text-gray-700 dark:group-hover:text-gray-300">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                    </svg>
+                </span>
+                Sign out
+            </button>
+        </form>
     </div>
 </div>

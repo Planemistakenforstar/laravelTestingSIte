@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -34,7 +34,7 @@ class LoginController extends Controller
     }
 
    public function commitNewPassword(Request $request)
-    {   
+    {
     $fields = $request->validate([
         'email'    => ['required', 'email'],
         'password' => ['required', 'string', 'min:8', 'confirmed'],
@@ -54,7 +54,7 @@ class LoginController extends Controller
 
     return redirect()->route('login')
         ->with('status', 'Password changed successfully! Please log in.');
-}
+    }
 
     public function logout(Request $request)
     {
