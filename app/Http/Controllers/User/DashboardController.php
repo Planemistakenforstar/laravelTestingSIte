@@ -11,4 +11,12 @@ class DashboardController extends Controller
             'user' => auth()->user(),
         ]);
     }
+
+    public function profile(){
+        return view('user.profile', [
+            'user'=> auth()->user(),
+        ]);
+    }
+
+
 }

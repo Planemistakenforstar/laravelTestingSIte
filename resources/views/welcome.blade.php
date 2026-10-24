@@ -1,120 +1,220 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Διαύγεια</title>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ config('app.name', 'Bandcamp Streamer') }} — Stream Bandcamp in your browser</title>
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700&display=swap" rel="stylesheet" />
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
+<body class="antialiased bg-gray-50 text-gray-900">
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
-<style>
-    {!! Vite::content('resources/css/app.css') !!}
-    </style>
-    </head>
-    <body class="antialiased">
-        <div class="relative sm:flex sm:justify-center sm:items-center min-h-screen bg-dots-darker bg-center bg-gray-100 dark:bg-dots-lighter dark:bg-gray-900 selection:bg-red-500 selection:text-white">
-        @if (session('success'))
-            <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400">
-                {{ session('success') }}
+    {{-- Top bar: brand + auth links --}}
+    <header class="w-full">
+        <nav class="max-w-7xl mx-auto flex items-center justify-between px-6 py-5">
+            <a href="/" class="flex items-center gap-2 font-semibold text-lg">
+                <span class="inline-flex h-8 w-8 items-center justify-center rounded-md bg-red-500 text-white">
+                    ♪
+                </span>
+                <span>Bandcamp Streamer</span>
+            </a>
+
+            <div class="flex items-center gap-3 text-sm">
+                @auth
+                    <a href="{{ url('/dashboard') }}"
+                       class="rounded-md bg-red-500 px-4 py-2 font-semibold text-white hover:bg-red-600 transition">
+                        Go to dashboard
+                    </a>
+                @else
+                    <a href="{{ route('login') }}"
+                       class="rounded-md px-4 py-2 font-semibold text-gray-700 hover:text-red-600 transition">
+                        Log in
+                    </a>
+                    @if (Route::has('register'))
+                        <a href="{{ route('register') }}"
+                           class="rounded-md bg-red-500 px-4 py-2 font-semibold text-white hover:bg-red-600 transition">
+                            Create account
+                        </a>
+                    @endif
+                @endauth
             </div>
-        @endif
-        @if (Route::has('login'))
-                <div class="sm:fixed sm:top-0 sm:right-0 p-6 text-right z-10">
+        </nav>
+    </header>
+
+    {{-- Hero --}}
+    <main class="max-w-7xl mx-auto px-6">
+        <section class="grid md:grid-cols-2 gap-12 items-center py-16 lg:py-24">
+            <div>
+                <p class="inline-block mb-4 rounded-full bg-red-50 px-3 py-1 text-xs font-semibold tracking-wide text-red-600 uppercase">
+                    Independent music, no middlemen
+                </p>
+
+                <h1 class="text-4xl sm:text-5xl font-bold leading-tight tracking-tight">
+                    Stream the music you love<br class="hidden sm:block">
+                    <span class="text-red-500">straight from Bandcamp.</span>
+                </h1>
+                <p class="mt-6 text-lg text-gray-600 max-w-lg">
+                    Paste an artist link, browse their discography, and press play — all in one place.
+                    No downloads, no re-uploads, no algorithm. Just the artists' own storefronts,
+                    playing in your browser.
+                </p>
+                <div class="mt-8 flex flex-wrap items-center gap-3">
                     @auth
-                        <a href="{{ url('/home') }}" class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Home</a>
+                        <a href="{{ url('/dashboard') }}"
+                           class="rounded-md bg-red-500 px-5 py-3 text-white font-semibold hover:bg-red-600 transition">
+                            Open dashboard
+                        </a>
                     @else
-                        <a href="{{ route('login') }}" class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Log in</a>
-                        @if (Route::has('register'))
-                            <a href="{{ route('register') }}" class="ml-4 font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Register</a>
-                        @endif
+                        <a href="{{ route('register') }}"
+                           class="rounded-md bg-red-500 px-5 py-3 text-white font-semibold hover:bg-red-600 transition">
+                            Start listening — it's free
+                        </a>
+                        <a href="{{ route('login') }}"
+                           class="rounded-md border border-gray-300 px-5 py-3 text-gray-700 font-semibold hover:border-gray-400 transition">
+                            I already have an account
+                        </a>
                     @endauth
                 </div>
-            @endif
-            <div class="w-full max-w-7xl mx-auto p-6 lg:p-8">
-                <!-- <div class="flex justify-center">
-                        <img class="w-fit" src="{{ asset('/img/1_8NaOAUmXNxVsC07xOUb2dA.jpg') }} ">
-                </div> -->
-                <div class="mt-16">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
-                        <a href="https://laravel.com/docs" class="scale-100 p-6 bg-white dark:bg-gray-800/50 dark:bg-gradient-to-bl from-gray-700/50 via-transparent dark:ring-1 dark:ring-inset dark:ring-white/5 rounded-lg shadow-2xl shadow-gray-500/20 dark:shadow-none flex motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-red-500">
-                            <div>
-                                <div class="h-16 w-16 bg-red-50 dark:bg-red-800/20 flex items-center justify-center rounded-full">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="w-7 h-7 stroke-red-500">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
-                                    </svg>
-                                </div>
-                                <h2 class="mt-6 text-xl font-semibold text-gray-900 dark:text-white">Documentation</h2>
-                                <p class="mt-4 text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
-                                    Laravel has wonderful documentation covering every aspect of the framework. Whether you are a newcomer or have prior experience with Laravel, we recommend reading our documentation from beginning to end.
-                                </p>
-                            </div>
+            </div>
 
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="self-center shrink-0 stroke-red-500 w-6 h-6 mx-6">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75" />
-                            </svg>
-                        </a>
-
-                        <a href="https://laracasts.com" class="scale-100 p-6 bg-white dark:bg-gray-800/50 dark:bg-gradient-to-bl from-gray-700/50 via-transparent dark:ring-1 dark:ring-inset dark:ring-white/5 rounded-lg shadow-2xl shadow-gray-500/20 dark:shadow-none flex motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-red-500">
-                            <div>
-                                <div class="h-16 w-16 bg-red-50 dark:bg-red-800/20 flex items-center justify-center rounded-full">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="w-7 h-7 stroke-red-500">
-                                        <path stroke-linecap="round" d="M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25h-9A2.25 2.25 0 002.25 7.5v9a2.25 2.25 0 002.25 2.25z" />
-                                    </svg>
-                                </div>
-                                <h2 class="mt-6 text-xl font-semibold text-gray-900 dark:text-white">Laracasts</h2>
-                                <p class="mt-4 text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
-                                    Laracasts offers thousands of video tutorials on Laravel, PHP, and JavaScript development. Check them out, see for yourself, and massively level up your development skills in the process.
-                                </p>
-                            </div>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="self-center shrink-0 stroke-red-500 w-6 h-6 mx-6">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75" />
-                            </svg>
-                        </a>
-
-                        <a href="https://laravel-news.com" class="scale-100 p-6 bg-white dark:bg-gray-800/50 dark:bg-gradient-to-bl from-gray-700/50 via-transparent dark:ring-1 dark:ring-inset dark:ring-white/5 rounded-lg shadow-2xl shadow-gray-500/20 dark:shadow-none flex motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-red-500">
-                            <div>
-                                <div class="h-16 w-16 bg-red-50 dark:bg-red-800/20 flex items-center justify-center rounded-full">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="w-7 h-7 stroke-red-500">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 01-2.25 2.25M16.5 7.5V18a2.25 2.25 0 002.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 002.25 2.25h13.5M6 7.5h3v3H6v-3z" />
-                                    </svg>
-                                </div>
-                                <h2 class="mt-6 text-xl font-semibold text-gray-900 dark:text-white">Laravel News</h2>
-                                <p class="mt-4 text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
-                                    Laravel News is a community driven portal and newsletter aggregating all of the latest and most important news in the Laravel ecosystem, including new package releases and tutorials.
-                                </p>
-                            </div>
-
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="self-center shrink-0 stroke-red-500 w-6 h-6 mx-6">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75" />
-                            </svg>
-                        </a>
-
-                        <div class="scale-100 p-6 bg-white dark:bg-gray-800/50 dark:bg-gradient-to-bl from-gray-700/50 via-transparent dark:ring-1 dark:ring-inset dark:ring-white/5 rounded-lg shadow-2xl shadow-gray-500/20 dark:shadow-none flex motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-red-500">
-                            <div>
-                                <div class="h-16 w-16 bg-red-50 dark:bg-red-800/20 flex items-center justify-center rounded-full">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="w-7 h-7 stroke-red-500">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6.115 5.19l.319 1.913A6 6 0 008.11 10.36L9.75 12l-.387.775c-.217.433-.132.956.21 1.298l1.348 1.348c.21.21.329.497.329.795v1.089c0 .426.24.815.622 1.006l.153.076c.433.217.956.132 1.298-.21l.723-.723a8.7 8.7 0 002.288-4.042 1.087 1.087 0 00-.358-1.099l-1.33-1.108c-.251-.21-.582-.299-.905-.245l-1.17.195a1.125 1.125 0 01-.98-.314l-.295-.295a1.125 1.125 0 010-1.591l.13-.132a1.125 1.125 0 011.3-.21l.603.302a.809.809 0 001.086-1.086L14.25 7.5l1.256-.837a4.5 4.5 0 001.528-1.732l.146-.292M6.115 5.19A9 9 0 1017.18 4.64M6.115 5.19A8.965 8.965 0 0112 3c1.929 0 3.716.607 5.18 1.64" />
-                                    </svg>
-                                </div>
-                                <h2 class="mt-6 text-xl font-semibold text-gray-900 dark:text-white">Vibrant Ecosystem</h2>
-                                <p class="mt-4 text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
-                                    Laravel's robust library of first-party tools and libraries, such as <a href="https://forge.laravel.com" class="underline hover:text-gray-700 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Forge</a>, <a href="https://vapor.laravel.com" class="underline hover:text-gray-700 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Vapor</a>, <a href="https://nova.laravel.com" class="underline hover:text-gray-700 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Nova</a>, and <a href="https://envoyer.io" class="underline hover:text-gray-700 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Envoyer</a> help you take your projects to the next level. Pair them with powerful open source libraries like <a href="https://laravel.com/docs/billing" class="underline hover:text-gray-700 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Cashier</a>, <a href="https://laravel.com/docs/dusk" class="underline hover:text-gray-700 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Dusk</a>, <a href="https://laravel.com/docs/broadcasting" class="underline hover:text-gray-700 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Echo</a>, <a href="https://laravel.com/docs/horizon" class="underline hover:text-gray-700 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Horizon</a>, <a href="https://laravel.com/docs/sanctum" class="underline hover:text-gray-700 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Sanctum</a>, <a href="https://laravel.com/docs/telescope" class="underline hover:text-gray-700 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Telescope</a>, and more.
-                                </p>
-                            </div>
+            {{-- Mock player card --}}
+            <div class="relative">
+                <div class="absolute -inset-4 rounded-3xl bg-gradient-to-tr from-red-100 via-white to-red-50 blur-2xl opacity-70"></div>
+                <div class="relative rounded-2xl bg-white shadow-xl ring-1 ring-gray-200 p-6">
+                    <div class="flex items-center gap-4">
+                        <div class="h-20 w-20 rounded-lg bg-gradient-to-br from-red-400 to-red-600 flex items-center justify-center text-white text-2xl font-bold">
+                            ♫
+                        </div>
+                        <div>
+                            <p class="text-xs uppercase tracking-wider text-gray-400">Now playing</p>
+                            <p class="font-semibold">Midnight Signals</p>
+                            <p class="text-sm text-gray-500">Nova Coast</p>
                         </div>
                     </div>
-                </div>
-                <div class="flex justify-center mt-16 px-0 sm:items-center sm:justify-between">
-                    <div class="text-center text-sm sm:text-left">
-                        &nbsp;
+
+                    <div class="mt-6 h-1.5 w-full rounded-full bg-gray-100 overflow-hidden">
+                        <div class="h-full w-2/5 bg-red-500"></div>
                     </div>
 
-                    <div class="text-center text-sm text-gray-500 dark:text-gray-400 sm:text-right sm:ml-0">
-                        Laravel v{{ Illuminate\Foundation\Application::VERSION }} (PHP v{{ PHP_VERSION }})
+                    <div class="mt-3 flex justify-between text-xs text-gray-400">
+                        <span>1:24</span>
+                        <span>3:41</span>
                     </div>
+
+                    <div class="mt-6 flex items-center justify-center gap-6 text-gray-600">
+                        <button class="text-xl" aria-label="Previous">⏮</button>
+                        <button class="h-12 w-12 rounded-full bg-red-500 text-white text-xl flex items-center justify-center hover:bg-red-600 transition" aria-label="Play">
+                            ▶
+                        </button>
+                        <button class="text-xl" aria-label="Next">⏭</button>
+                    </div>
+
+                    <p class="mt-6 text-center text-xs text-gray-400">
+                        Played via Bandcamp's official embed
+                    </p>
                 </div>
             </div>
+        </section>
+
+        {{-- Features --}}
+        <section class="py-16 border-t border-gray-200">
+            <h2 class="text-2xl font-bold tracking-tight text-center">Built for the way Bandcamp fans listen</h2>
+            <p class="mt-2 text-center text-gray-600 max-w-xl mx-auto">
+                Everything you need to explore an artist's catalog without leaving the page.
+            </p>
+
+            <div class="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="rounded-xl bg-white p-6 ring-1 ring-gray-200">
+                    <div class="h-10 w-10 rounded-lg bg-red-50 text-red-500 flex items-center justify-center text-xl">🎧</div>
+                    <h3 class="mt-4 font-semibold">Browse by artist</h3>
+                    <p class="mt-2 text-sm text-gray-600">
+                        Drop in any artist page URL and instantly see their albums and tracks laid out as cards.
+                    </p>
+                </div>
+
+                <div class="rounded-xl bg-white p-6 ring-1 ring-gray-200">
+                    <div class="h-10 w-10 rounded-lg bg-red-50 text-red-500 flex items-center justify-center text-xl">▶</div>
+                    <h3 class="mt-4 font-semibold">Play instantly</h3>
+                    <p class="mt-2 text-sm text-gray-600">
+                        Click an album and the official Bandcamp player loads right on the page — no redirects.
+                    </p>
+                </div>
+
+                <div class="rounded-xl bg-white p-6 ring-1 ring-gray-200">
+                    <div class="h-10 w-10 rounded-lg bg-red-50 text-red-500 flex items-center justify-center text-xl">❤</div>
+                    <h3 class="mt-4 font-semibold">Support the artists</h3>
+                    <p class="mt-2 text-sm text-gray-600">
+                        Playback goes through Bandcamp's own player, so artists still get their plays and sales.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        {{-- How it works --}}
+        <section class="py-16 border-t border-gray-200">
+            <h2 class="text-2xl font-bold tracking-tight text-center">How it works</h2>
+
+            <ol class="mt-10 grid grid-cols-1 md:grid-cols-3 gap-8">
+                <li class="flex gap-4">
+                    <span class="flex-shrink-0 h-8 w-8 rounded-full bg-red-500 text-white flex items-center justify-center font-semibold">1</span>
+                    <div>
+                        <h3 class="font-semibold">Create an account</h3>
+                        <p class="mt-1 text-sm text-gray-600">Sign up in seconds so your dashboard is yours.</p>
+                    </div>
+                </li>
+                <li class="flex gap-4">
+                    <span class="flex-shrink-0 h-8 w-8 rounded-full bg-red-500 text-white flex items-center justify-center font-semibold">2</span>
+                    <div>
+                        <h3 class="font-semibold">Paste an artist link</h3>
+                        <p class="mt-1 text-sm text-gray-600">Any <code class="text-xs">artist.bandcamp.com</code> URL works.</p>
+                    </div>
+                </li>
+                <li class="flex gap-4">
+                    <span class="flex-shrink-0 h-8 w-8 rounded-full bg-red-500 text-white flex items-center justify-center font-semibold">3</span>
+                    <div>
+                        <h3 class="font-semibold">Press play</h3>
+                        <p class="mt-1 text-sm text-gray-600">Open an album card and listen right there.</p>
+                    </div>
+                </li>
+            </ol>
+        </section>
+
+        {{-- Final CTA --}}
+        <section class="py-16">
+            <div class="rounded-2xl bg-gray-900 text-white p-10 text-center">
+                <h2 class="text-2xl sm:text-3xl font-bold tracking-tight">Ready to stream?</h2>
+                <p class="mt-3 text-gray-300 max-w-xl mx-auto">
+                    Join and start listening to independent music the way it was meant to be heard — from the artists themselves.
+                </p>
+
+                <div class="mt-6 flex justify-center gap-3">
+                    @auth
+                        <a href="{{ url('/dashboard') }}"
+                           class="rounded-md bg-white text-gray-900 px-5 py-3 font-semibold hover:bg-gray-100 transition">
+                            Go to dashboard
+                        </a>
+                    @else
+                        <a href="{{ route('register') }}"
+                           class="rounded-md bg-red-500 px-5 py-3 font-semibold hover:bg-red-600 transition">
+                            Create free account
+                        </a>
+                        <a href="{{ route('login') }}"
+                           class="rounded-md border border-white/30 px-5 py-3 font-semibold hover:border-white/60 transition">
+                            Log in
+                        </a>
+                    @endauth
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="border-t border-gray-200">
+        <div class="max-w-7xl mx-auto px-6 py-8 text-sm text-gray-500 flex flex-col sm:flex-row justify-between gap-3">
+            <p>&copy; {{ date('Y') }} Bandcamp Streamer. Not affiliated with Bandcamp.</p>
+            <p>Music lives on <a href="https://bandcamp.com" target="_blank" rel="noopener" class="underline hover:text-gray-700">bandcamp.com</a></p>
         </div>
-    </body>
+    </footer>
+
+</body>
 </html>

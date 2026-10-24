@@ -1,63 +1,62 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Register page</title>
+<x-guest-layout>
+    <div class="mb-6 text-center">
+        <a href="/" class="inline-flex items-center gap-2 font-semibold text-lg text-gray-900">
+            <span class="inline-flex h-8 w-8 items-center justify-center rounded-md bg-red-600 text-white">♪</span>
+            <span>Bandcamp Streamer</span>
+        </a>
+        <h1 class="mt-4 text-xl font-bold text-gray-900">Create your account</h1>
+        <p class="mt-1 text-sm text-gray-600">Start streaming Bandcamp artists in seconds.</p>
+    </div>
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
+    <form method="POST" action="{{ route('register') }}" class="space-y-4">
+        @csrf
 
-        <!-- Styles -->
-<style>
-    {!! Vite::content('resources/css/app.css') !!}
-    </style>
-    </head>
- <body class="bg-gray-50 dark:bg-gray-900 ">
-        <section class="min-h-screen flex flex-col items-center justify-center">
-                <div class="px-6 py-8 mx-auto lg:py-0">
-                    <div class="w-full grid grid-cols-1 bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-                        <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
-                            <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-                                Register
-                            </h1>
-                            <form class="space-y-4 md:space-y-6" method="POST" action="{{ route('register.store')}}">
-                                @csrf
-                                <div>
-                                    <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
-                                    <input type="text" name="name" id="name" value="{{ old('name') }}"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                        placeholder="Jane Doe" required>
-                                    @error('name') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
-                                </div>
-                                <div>
-                                    <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
-                                    <input type="email" name="email" id="email" value="{{ old('email') }}"  class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@company.com" required="">
-                                </div>
-                                <div>
-                                    <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
-                                    <input type="password" name="password" id="password" required placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required="">
-                                    @error('password') <span>{{ $message }}</span> @enderror
+        <!-- Name -->
+        <div class="my-6">
+            <x-input-label for="name" :value="__('Name')" />
+            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
+            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+        </div>
 
-                                </div>
-                                <div>
-                                    <label for="password_confirmation" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                        Confirm password
-                                    </label>
-                                    <input type="password" name="password_confirmation" id="password_confirmation" required
-                                        placeholder="••••••••"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                    @error('password_confirmation') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
-                                </div>
-                                <button type="submit" class="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Sign in</button>
-                                <p class="text-sm font-light text-gray-500 dark:text-gray-400">
-                                    Already have an account? <a href="/login" class="font-medium text-primary-600 hover:underline dark:text-primary-500">Login</a>
-                                </p>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-        </section>
-    </body>
-</html>
+        <!-- Email Address -->
+        <div class="my-6">
+            <x-input-label for="email" :value="__('Email')" />
+            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
+            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        </div>
+
+        <!-- Password -->
+        <div class="my-6">
+            <x-input-label for="password" :value="__('Password')" />
+            <x-text-input id="password" class="block mt-1 w-full"
+                          type="password"
+                          name="password"
+                          required autocomplete="new-password" />
+            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="my-6">
+            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
+            <x-text-input id="password_confirmation" class="block mt-1 w-full"
+                          type="password"
+                          name="password_confirmation" required autocomplete="new-password" />
+            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+        </div>
+
+        <!-- Submit -->
+        <div class="my-6">
+            <x-primary-button class="w-full justify-center bg-red-600 hover:bg-red-700 focus:ring-red-500">
+                {{ __('Register') }}
+            </x-primary-button>
+        </div>
+
+        <!-- Login link -->
+        <p class="text-center text-sm text-gray-600">
+            Already registered?
+            <a href="{{ route('login') }}" class="font-semibold text-red-600 hover:text-red-700">
+                Log in
+            </a>
+        </p>
+    </form>
+</x-guest-layout>
