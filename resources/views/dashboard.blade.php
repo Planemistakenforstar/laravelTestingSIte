@@ -28,11 +28,10 @@
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6 text-gray-900">
                         <h3 class="font-semibold mb-4">My tracks</h3>
-
                         @forelse (auth()->user()->tracks()->latest()->get() as $track)
                             <div class="flex items-center justify-between py-2 border-b last:border-0">
                                 <div>
-                                    <a href="{{ route('dashboard.tracks.show', $track) }}"
+                                    <a href="{{ route('tracks.show', $track) }}"
                                        class="font-medium hover:underline">
                                         {{ $track->title }}
                                     </a>

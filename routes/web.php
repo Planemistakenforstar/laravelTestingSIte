@@ -33,12 +33,14 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth'])->prefix('dashboard')->group(function () {
     Route::get('/', fn () => view('dashboard'))->name('dashboard');
     Route::get('/artist', [BandcampArtistController::class, 'show'])->name('dashboard.artist');
+    Route::get('/tracks',        [TrackController::class, 'index'])->name('dashboard.tracks.index');  // ← NEW
     Route::get('/tracks/create', [TrackController::class, 'create'])->name('dashboard.tracks.create');
     Route::post('/tracks',       [TrackController::class, 'store'])->name('dashboard.tracks.store');
 });
 
+// routes/web.php — public, outside the dashboard group
+Route::get('/tracks', [TrackController::class, 'index'])->name('tracks.index');
 Route::get('/tracks/{track}', [TrackController::class, 'show'])->name('tracks.show');
-
 
 // Public
 Route::get('/tracks/{track}', [TrackController::class, 'show'])->name('tracks.show');
