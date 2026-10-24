@@ -35,6 +35,10 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware('auth')
     ->name('dashboard');
 
+Route::get('/profile', [DashboardController::class,'profile'])
+->middleware('auth')
+->name('profile');
+
 
 // GET forgot password page, default view
 Route::get('/forgot-password',  [LoginController::class, 'forgotPassword'])->name('forgotPassword');
