@@ -8,16 +8,16 @@
         <p class="mt-1 text-sm text-gray-600">Log in to keep listening.</p>
     </div>
     <x-auth-session-status class="mb-4" :status="session('status')" />
-    <form method="POST" action="{{ route('login') }}" class="space-y-4">
+    <form method="POST" action="{{ route('login') }}">
         @csrf
-        <div class="my-6">
+        <div class="my-4">
             <x-input-label for="email" :value="__('Email')" />
             <x-text-input id="email" class="block mt-1 w-full" type="email" name="email"
                           :value="old('email')" required autofocus autocomplete="username" />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
-        <div class="my-6">
+        <div class="my-4">
             <x-input-label for="password" :value="__('Password')" />
             <x-text-input id="password" class="block mt-1 w-full" type="password"
                           name="password" required autocomplete="current-password" />
@@ -25,7 +25,7 @@
         </div>
 
         <div class="flex items-center justify-between my-6">
-            <label for="remember_me" class="inline-flex items-center">
+            <x-input-label for="remember_me" class="inline-flex items-center">
                 <input id="remember_me" type="checkbox"
                        class="rounded border-gray-300 text-red-600 shadow-sm focus:ring-red-500"
                        name="remember">
@@ -38,11 +38,9 @@
                 </a>
             @endif
         </div>
-
         <x-primary-button class="w-full justify-center bg-red-600 hover:bg-red-700 focus:ring-red-500">
             {{ __('Log in') }}
         </x-primary-button>
-
         @if (Route::has('register'))
             <p class="text-center text-sm text-gray-600 mt-3">
                 No account?

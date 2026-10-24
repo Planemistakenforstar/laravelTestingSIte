@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\User\BandcampAlbumController;
+use App\Http\Controllers\TrackController;
 use App\Http\Controllers\User\BandcampArtistController;
 use Illuminate\Support\Facades\Route;
 
@@ -33,7 +33,13 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth'])->prefix('dashboard')->group(function () {
     Route::get('/', fn () => view('dashboard'))->name('dashboard');
     Route::get('/artist', [BandcampArtistController::class, 'show'])->name('dashboard.artist');
-    Route::get('/album',  [BandcampAlbumController::class, 'show'])->name('dashboard.album');
+    Route::get('/tracks/create', [TrackController::class, 'create'])->name('dashboard.tracks.create');
+    Route::post('/tracks',       [TrackController::class, 'store'])->name('dashboard.tracks.store');
 });
 
+Route::get('/tracks/{track}', [TrackController::class, 'show'])->name('tracks.show');
+
+
+// Public
+Route::get('/tracks/{track}', [TrackController::class, 'show'])->name('tracks.show');
 require __DIR__.'/auth.php';
