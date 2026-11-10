@@ -29,13 +29,13 @@ class TrackController extends Controller
             ->route('tracks.show', $track)
             ->with('status', 'Track uploaded and cleared for airplay.');
     }
-   public function index()
+    public function index()
     {
         $tracks = Track::clearedForAirplay()->with('artist')->latest()->paginate(20);
         return view('tracks.index', compact('tracks'));
     }
-        public function show(Track $track)
-        {
-            return view('tracks.show', compact('track'));
-        }
+    public function show(Track $track)
+    {
+        return view('tracks.show', compact('track'));
+    }
 }

@@ -3,6 +3,8 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TrackController;
 use App\Http\Controllers\User\BandcampArtistController;
+use App\Http\Controllers\User\ForumController;
+use App\Http\Controllers\User\LessonsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,11 +33,21 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware(['auth'])->prefix('dashboard')->group(function () {
-    Route::get('/', fn () => view('dashboard'))->name('dashboard');
+    Route::get('/', fn() => view('dashboard'))->name('dashboard');
     Route::get('/artist', [BandcampArtistController::class, 'show'])->name('dashboard.artist');
     Route::get('/tracks',        [TrackController::class, 'index'])->name('dashboard.tracks.index');  // ← NEW
     Route::get('/tracks/create', [TrackController::class, 'create'])->name('dashboard.tracks.create');
     Route::post('/tracks',       [TrackController::class, 'store'])->name('dashboard.tracks.store');
+});
+
+
+Route::middleware(['auth'])->prefix('forum')->group(function () {
+    Route::get('/', [ForumController::class, 'index'])->name('forum');
+});
+
+
+Route::middleware(['auth'])->prefix('lessons')->group(function () {
+    Route::get('/', [LessonsController::class, 'index'])->name('lessons');
 });
 
 // routes/web.php — public, outside the dashboard group
@@ -44,4 +56,4 @@ Route::get('/tracks/{track}', [TrackController::class, 'show'])->name('tracks.sh
 
 // Public
 Route::get('/tracks/{track}', [TrackController::class, 'show'])->name('tracks.show');
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

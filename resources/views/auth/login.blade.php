@@ -13,41 +13,41 @@
         <div class="my-4">
             <x-input-label for="email" :value="__('Email')" />
             <x-text-input id="email" class="block mt-1 w-full" type="email" name="email"
-                          :value="old('email')" required autofocus autocomplete="username" />
+                :value="old('email')" required autofocus autocomplete="username" />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
         <div class="my-4">
             <x-input-label for="password" :value="__('Password')" />
             <x-text-input id="password" class="block mt-1 w-full" type="password"
-                          name="password" required autocomplete="current-password" />
+                name="password" required autocomplete="current-password" />
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 
         <div class="flex items-center justify-between my-6">
             <x-input-label for="remember_me" class="inline-flex items-center">
                 <input id="remember_me" type="checkbox"
-                       class="rounded border-gray-300 text-red-600 shadow-sm focus:ring-red-500"
-                       name="remember">
+                    class="rounded border-gray-300 text-red-600 shadow-sm focus:ring-red-500"
+                    name="remember">
                 <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
-            </label>
+            </x-input-label>
             @if (Route::has('password.request'))
-                <a class="text-sm text-gray-600 underline hover:text-gray-900"
-                   href="{{ route('password.request') }}">
-                    {{ __('Forgot password?') }}
-                </a>
+            <a class="text-sm text-gray-600 underline hover:text-gray-900"
+                href="{{ route('password.request') }}">
+                {{ __('Forgot password?') }}
+            </a>
             @endif
         </div>
         <x-primary-button class="w-full justify-center bg-red-600 hover:bg-red-700 focus:ring-red-500">
             {{ __('Log in') }}
         </x-primary-button>
         @if (Route::has('register'))
-            <p class="text-center text-sm text-gray-600 mt-3">
-                No account?
-                <a href="{{ route('register') }}" class="font-semibold text-red-600 hover:text-red-700">
-                    Create one
-                </a>
-            </p>
+        <p class="text-center text-sm text-gray-600 mt-3">
+            No account?
+            <a href="{{ route('register') }}" class="font-semibold text-red-600 hover:text-red-700">
+                Create one
+            </a>
+        </p>
         @endif
     </form>
 </x-guest-layout>
